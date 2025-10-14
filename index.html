@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Vidhya's Birthday - Special Memories</title>
+  <title>Vidhya's Birthday Special Memories</title>
+  <link rel="icon" type="image/x-icon" href="https://github.com/nithil112/birthdayWish/raw/main/Gemini_Generated_Image_6phejz6phejz6phe%20(1).png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
@@ -790,6 +791,74 @@
   100% { transform: scaleY(1); }
 }
 
+#emotion-audio {
+  margin: 60px auto;
+  text-align: center;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 25px;
+  padding: 30px 25px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+  font-family: 'Poppins', sans-serif;
+  animation: fadeIn 1.5s ease-in-out;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+#emotion-audio p {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #3b2a2a;
+  font-weight: 400;
+  margin-bottom: 20px;
+  letter-spacing: 0.4px;
+  text-align: center;
+  max-width: 600px;
+}
+
+#emotion-audio p::first-letter {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #d63384;
+}
+
+#emotion-audio audio {
+  width: 85%;
+  border-radius: 15px;
+  outline: none;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#emotion-audio audio:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+#emotion-audio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  background: radial-gradient(circle at top left, rgba(255,192,203,0.3), transparent 70%),
+              radial-gradient(circle at bottom right, rgba(255,223,186,0.3), transparent 70%);
+  z-index: -1;
+}
 
   </style>
 </head>
@@ -1090,14 +1159,16 @@ On this special day, I wish you a truly beautiful and heartfelt Happy Birthday, 
         <div style="font-size: 0.8em; opacity: 0.7;">Your personalized birthday message! 🎥✨</div>
       </div>
     </div>
+    
     <div id="emotion-audio" style="margin: 20px 0; text-align: center; position: relative;">
-  <p>recently came across this audio, and the very first person who came to my mind was you, Mole. <br>
+  <p> I Recently came across this audio, and the very first person who came to my mind was you, Mole. <br>
     Some bonds remain unchanged, no matter how much life changes. <br>
     I wanted to share this with you because, no matter what changes come, you’ll always remain my best and most trusted friend forever.</p>
   <audio id="sadAudio" controls>
     <source src="https://github.com/nithil112/birthdayWish/raw/main/b2audio.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
+  
   <!-- Animation icon -->
   <div id="audioAnim" style="display:none; margin-top: 10px;">
     <span class="bars"></span>
@@ -1106,6 +1177,7 @@ On this special day, I wish you a truly beautiful and heartfelt Happy Birthday, 
     <span class="bars"></span>
   </div>
 </div>
+
 
 
     <div class="birthday-message">
