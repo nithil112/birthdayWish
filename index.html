@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Vidhya's Birthday - Special Memories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      height: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      font-family: 'Poppins', sans-serif;
+      background: #000;
+    }
+
+    /* Floating Hearts Animation */
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      color: #ff6b9d;
+      font-size: 20px;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Loading Screen */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d4fc79 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 3s ease infinite;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loader-content h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2rem, 8vw, 4rem);
+      color: #c2185b;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .loader-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid #c2185b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px 0;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Music Control */
+    .music-control {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);
+      color: white;
+      border: none;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 6px 20px rgba(194, 24, 91, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .music-control:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .music-control.playing {
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Welcome Message */
+    .welcome-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 1s ease;
+    }
+
+    .welcome-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .welcome-content {
+      text-align: center;
+      color: white;
+      max-width: 600px;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(194, 24, 91, 0.9), rgba(255, 107, 157, 0.9));
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .welcome-content h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      margin: 0 0 20px 0;
+      color: #fff;
+    }
+
+    .welcome-content p {
+      font-size: 1.2rem;
+      margin: 0 0 30px 0;
+      line-height: 1.6;
+    }
+
+    .start-btn {
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      color: #c2185b;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    .start-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6);
+    }
+
+    /* Intro Video Section */
+    #intro {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d4fc79 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      z-index: 50;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .intro-container {
+      position: relative;
+      width: min(1200px, 90vw);
+      height: min(700px, 80vh);
+      background: rgba(34, 34, 34, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      border: 3px solid #c2185b;
+    }
+
+    #introVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Album Container */
+    #album {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d4fc79 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      padding: 20px 0;
+      z-index: 20;
+    }
+
+    .album-heading {
+      text-align: center;
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 700;
+      margin: 20px 0;
+      color: #c2185b;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6), 0 0 20px #ff6b9d; }
+      to { text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6), 0 0 30px #c2185b; }
+    }
+
+    .book-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 80vh;
+      padding: 20px;
+    }
+
+    .book {
+      width: min(600px, 90vw);
+      height: min(700px, 75vh);
+      perspective: 2500px;
+      position: relative;
+      filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.3));
+    }
+
+    .book::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 5%;
+      width: 12px;
+      height: 90%;
+      background: linear-gradient(to right, #8b4513, #a0522d, #8b4513);
+      border-radius: 4px 0 1px 4px;
+      box-shadow: inset -2px 0 5px rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+
+    .page {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: left center;
+      transition: transform 1.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+      transform-style: preserve-3d;
+    }
+
+    .page-content {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 245, 0.9));
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(15px, 4vw, 30px);
+      gap: clamp(10px, 2vh, 20px);
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page img {
+      width: 100%;
+      max-width: 80%;
+      max-height: 60%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      margin: 0;
+      display: block;
+      flex-shrink: 0;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+      transition: transform 0.3s ease;
+    }
+
+    .page img:hover {
+      transform: scale(1.05);
+    }
+
+    .page p {
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      color: #c2185b;
+      text-align: center;
+      font-weight: 500;
+      line-height: 1.6;
+      max-width: 90%;
+      margin: 0;
+      flex-grow: 1;
+      overflow-y: auto;
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: #c2185b transparent;
+    }
+
+    .page p::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .page p::-webkit-scrollbar-thumb {
+      background-color: #c2185b;
+      border-radius: 4px;
+    }
+
+    .page p::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);
+      color: #fff;
+      border: none;
+      width: clamp(50px, 12vw, 65px);
+      height: clamp(50px, 12vw, 65px);
+      border-radius: 50%;
+      font-size: clamp(20px, 5vw, 28px);
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 8px 25px rgba(194, 24, 91, 0.4);
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #prevPage {
+      left: 3%;
+    }
+
+    #nextPage {
+      right: 3%;
+    }
+
+    .arrow:hover {
+      transform: translateY(-50%) scale(1.15);
+    }
+
+    .page.flipped {
+      transform: rotateY(-185deg);
+    }
+
+    /* Enhanced Theater Section */
+    #theater {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #d4fc79 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      padding: 40px 20px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .theater-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.5rem, 7vw, 4rem);
+      color: #c2185b;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    .mini-screen-container {
+      position: relative;
+      width: min(800px, 90vw);
+      height: min(450px, 50vh);
+      background: #222;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      margin: 20px auto;
+      border: 3px solid #c2185b;
+    }
+
+    .mini-screen-container:hover {
+      transform: scale(1.02);
+    }
+
+    .mini-screen-container.closed {
+      transform: scale(0.9);
+      opacity: 0.8;
+    }
+
+    .mini-screen-container.open {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .screen-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #111, #333);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .screen-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #ffd700;
+    }
+
+    /* Birthday Message */
+    .birthday-message {
+      width: min(600px, 90vw);
+      max-width: 700px;
+      margin: 30px auto;
+      padding: clamp(20px, 5vw, 40px);
+      background: url('https://www.transparenttextures.com/patterns/old-wall.png'), linear-gradient(135deg, #fff8dc, #f5deb3);
+      border: 5px solid #d4af37;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3);
+      text-align: center;
+      position: relative;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: #3c2f2f;
+      font-weight: 500;
+      line-height: 1.8;
+    }
+
+    .birthday-message::before {
+      content: '🎂';
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 3rem;
+      animation: bounce 2s infinite;
+    }
+
+    /* Gift Box Animation */
+    .gift-section {
+      margin: 40px 0;
+    }
+
+    .gift-box {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      position: relative;
+      cursor: pointer;
+      animation: shake 2s infinite;
+    }
+
+    .gift-box:hover {
+      animation: none;
+      transform: scale(1.1);
+    }
+
+    .gift-cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .gift-cube.open {
+      transform: rotateX(180deg);
+    }
+
+    .gift-face {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(45deg, #ff6b9d, #c2185b);
+      border: 3px solid #ffd700;
+    }
+
+    .gift-front { transform: translateZ(100px); }
+    .gift-back { transform: rotateY(180deg) translateZ(100px); }
+    .gift-right { transform: rotateY(90deg) translateZ(100px); }
+    .gift-left { transform: rotateY(-90deg) translateZ(100px); }
+    .gift-top { transform: rotateX(90deg) translateZ(100px); background: linear-gradient(45deg, #ffd700, #ffed4e); }
+    .gift-bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+    .gift-lid {
+      position: absolute;
+      width: 210px;
+      height: 20px;
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      top: -10px;
+      left: -5px;
+      border: 2px solid #c2185b;
+      z-index: 10;
+    }
+
+    .gift-inside {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .gift-cube.open .gift-inside {
+      opacity: 1;
+    }
+
+    /* Fireworks */
+    .fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .firework {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #ffd700;
+      border-radius: 50%;
+      animation: explode 2s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        opacity: 1;
+        transform: scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 101;
+      overflow: hidden;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 20px;
+      background: #ffd700;
+      opacity: 0.8;
+      animation: confetti-fall 5s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100%) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Share Button */
+    .share-btn {
+      background: linear-gradient(45deg, #4ecdc4, #44a08d);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      margin: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    .share-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(78, 205, 196, 0.6);
+    }
+
+    /* End Popup */
+    #endPopup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #ff6b9d 0%, #c2185b 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      text-align: center;
+      z-index: 1001;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+    }
+
+    #endPopup.active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    #endPopup p {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    #endPopup button {
+      background: #ffd700;
+      color: #c2185b;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .book {
+        width: 90vw;
+        height: min(550px, 70vh);
+      }
+
+      .page img {
+        max-height: 50%;
+      }
+
+      .arrow {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+
+      #prevPage { left: 5%; }
+      #nextPage { right: 5%; }
+
+      .mini-screen-container {
+        width: 90vw;
+        height: 40vh;
+      }
+
+      .gift-box {
+        width: 150px;
+        height: 150px;
+      }
+
+      .gift-face {
+        width: 150px;
+        height: 150px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .book {
+        width: 95vw;
+        height: min(500px, 65vh);
+      }
+
+      .mini-screen-container {
+        height: 35vh;
+      }
+
+      .gift-box {
+        width: 120px;
+        height: 120px;
+      }
+
+      .gift-face {
+        width: 120px;
+        height: 120px;
+      }
+    }
+    .scroll-hint {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #0b0b0b;
+  animation: bounce 1.2s infinite;
+  margin-top: 8px;
+  opacity: 0.8;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+.bars {
+  display: inline-block;
+  width: 5px;
+  height: 10px;
+  margin: 0 2px;
+  background: #ff69b4;
+  animation: bounce 0.5s infinite alternate;
+}
+
+.bars:nth-child(2) { animation-delay: 0.1s; }
+.bars:nth-child(3) { animation-delay: 0.2s; }
+.bars:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(2); }
+  100% { transform: scaleY(1); }
+}
+
+
+  </style>
+</head>
+<body>
+  <!-- Floating Hearts -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <!-- Fireworks Container -->
+  <div class="fireworks" id="fireworks"></div>
+
+  <!-- Confetti Container -->
+  <div class="confetti" id="confetti"></div>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <h1>🎉 Happy Birthday Vidhya! 🎉</h1>
+      <div class="loader-spinner"></div>
+      <p>Loading beautiful memories...</p>
+    </div>
+  </div>
+
+  <!-- Music Control -->
+  <button class="music-control playing" id="musicControl" title="Toggle Music">
+    <i class="fas fa-volume-up"></i>
+  </button>
+
+  <!-- Audio -->
+  <audio id="bgMusic" loop preload="auto" volume="0.3">
+    <source src="https://github.com/nithil112/birthdayWish/raw/main/Happy_birthday_to_you_MIDI(chosic.com).mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Welcome Overlay -->
+  <div class="welcome-overlay" id="welcomeOverlay">
+    <div class="welcome-content">
+      <h1>Happy Birthday, Vidhya! 🎂✨</h1>
+      <p>A special journey of memories awaits you. Click below to begin your birthday surprise!</p>
+      <button class="start-btn" id="startBtn">
+        <i class="fas fa-magic"></i> Start Magical Journey
+      </button>
+    </div>
+  </div>
+
+  <!-- Intro Section -->
+  <div id="intro">
+    <div class="intro-container">
+      <video id="introVideo" muted playsinline loop>
+        <source src="https://raw.githubusercontent.com/nithil112/birthdayWish/main/birthday_index_video.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- Album Section -->
+  <div id="album" style="display: none;">
+  <h2 class="album-heading">✨ Memories from Our Friendship Journey ✨</h2>
+  <div class="book-container">
+    <button class="arrow" id="prevPage" aria-label="Previous page">‹</button>
+    <div class="book">
+
+      <div class="page" id="page1">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/bdwish.png" alt="Memory 1">
+          <p>Happy 22nd Birthday mole!<br>
+            This album is a little piece of my heart, made just for you. Filled with memories and smiles💫
+          </p>
+        </div>
+      </div>
+
+      <div class="page" id="page2">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/2nd%20pic.jpeg" alt="Memory 2">
+          <p>
+            It all began on the first day of college in 2021.<br>
+            We barely spoke for a few minutes, just classmates then, strangers sharing the same space.<br>
+            But time has its quiet magic.<br>
+            Little talks turned into long conversations, and slowly, a beautiful bond started to grow something we never expected.<br>
+            We didn’t even have a single photo together back then. But when this one was taken, it felt different.<br>
+            It wasn’t just a picture… it was the start of so many memories the moment that quietly said, we’re no longer just classmates, we’re friends for life. ❤️
+          </p>
+          <span class="scroll-hint">⬇️ Scroll for more</span>
+        </div>
+      </div>
+
+      <div class="page" id="page3">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/3rd_pic.jpeg" alt="Memory 3">
+          <p> This photo was taken on a special day the day you were heading home.<br>
+            You brought me a box of sweets, and even though it was just a simple gift, it meant so much to me.<br>
+            It wasn’t just about the sweets; it was the thought behind it, the warmth you shared.<br>
+            That day felt so special one of those small, beautiful moments I’ll always remember. 🍬💛
+          </p>
+          <span class="scroll-hint">⬇️ Scroll for more</span>
+        </div>
+      </div>
+
+      <div class="page" id="page4">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/birthday_of_me.jpeg" alt="Memory 4">
+          <p> I had one of the most wonderful birthdays of my college life <br>
+and it was all because of you, mole. ❤️<br>
+That day still lingers in my heart,<br>
+a memory I’ll never forget.<br>
+<br>
+I never expected such a gift <br>
+that T-shirt, covered with everyone’s fingerprints,<br>
+each mark holding a piece of love and laughter.<br>
+It made me feel so emotional,<br>
+so deeply happy in a way words can’t describe.<br>
+<br>
+You made that day shine brighter than ever.<br>
+Thank you, truly, for every bit of effort you put in.</p>
+        </div>
+      </div>
+
+      <div class="page" id="page5">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/ophenge.jpeg" alt="Memory 5">
+          <p>I hope you still remember that beautiful day <br>
+when we, along with our friends, went to the orphanage.<br>
+It remains one of the most unforgettable memories of my life.<br>
+<br>
+Among all the birthdays I’ve had,<br>
+that one will always shine the brightest <br>
+so precious, so wonderful,<br>
+a day that felt like a blessing from above.<br>
+<br>
+Celebrating my birthday with those little kids<br>
+filled my heart with a kind of peace and joy I’ll never forget.<br>
+And it all happened because of you.<br>
+<br>
+I have no words big enough to express my gratitude <br>
+just a simple, heartfelt thank you.<br>
+You’ve always guided me on the right path,<br>
+and truly, you’re a rare gem in my heart. 💫</p>
+        </div>
+      </div>
+
+      <!-- <div class="page" id="page6">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/onam.jpeg" alt="Memory 6">
+          <p>🎉 Onam celebrations brought us closer — a day filled with joy, colors, and unforgettable laughs!</p>
+        </div>
+      </div> -->
+
+      <div class="page" id="page7">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/vidhy's%20birthday.jpeg" alt="Memory 7">
+          <p>This was your 21st birthday <br>
+a day that was truly special for you,<br>
+and unforgettable for me.<br>
+<br>
+I still remember…<br>
+I came all the way from home<br>
+just to be part of your celebration.<br>
+I had planned so many little surprises,<br>
+but not everything went as I dreamed.<br>
+<br>
+Still, I gave my 100%<br>
+just to make your birthday<br>
+a little more special, a little more magical.</p>
+        </div>
+      </div>
+
+      <div class="page" id="page8">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/gokul'd%20birthday.jpeg" alt="Memory 8">
+          <p>This picture was taken on Gokul’s birthday <br>
+just the three of us, enjoying every moment of that day.<br>
+We three of us made our college final year<br>
+more memorable, filled with smiles and love.<br>
+<br>
+Some pictures capture simple moments,<br>
+but when we see them in the future,<br>
+they’ll remind us of those beautiful days.<br>
+And this one, especially,<br>
+holds even more memories and emotions,<br>
+etched forever in our hearts. ❤️</p>
+        </div>
+      </div>
+
+      <div class="page" id="page9">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/pic%20of%20return%20from%20chennai.jpeg" alt="Memory 9">
+          <p>I hope you remember this picture…<br>
+Honestly, words feel too small for it.<br>
+It’s one of the best memories of my life.<br>
+<br>
+Those days will never come back… 😔<br>
+I miss them so much.<br>
+<br>
+The early morning travels,<br>
+two cups of tea,<br>
+the golden sunlight of the morning <br>
+every little thing felt so alive.<br>
+<br>
+It hits me even more when I think of those early drives,<br>
+tea in hand, laughter filling the air…<br>
+and yet, without you there, I can hardly imagine it <br>
+it brings tears to my eyes. ❤️<br>
+<br>
+I feel so emotional…<br>
+sometimes it even brings tears to my eyes.<br>
+I’ll never get days like those back…<br>
+I miss you, mole… ❤️
+
+</p>
+        </div>
+      </div>
+
+      <div class="page" id="page10">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/pic%20of%202%20return%20of%20chennai.jpeg" alt="Memory 10">
+          <p>This picture is from another special day <br>
+the day you came all the way from Chennai for our college farewell.<br>
+<br>
+We were late for the farewell,<br>
+and our friends were scolding us for it… 😅<br>
+<br>
+But that day, I truly realized <br>
+you’re a skilled bike rider. 🏍️<br>
+You reached college from Salem in just 20 minutes,<br>
+turning a simple ride into an unforgettable adventure.<br>
+<br>
+It became one of those memories<br>
+I’ll always look back on and smile. ❤️</p>
+        </div>
+      </div>
+
+      <div class="page" id="page11">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/final%20pic%20of%20college.jpeg" alt="Memory 11">
+          <p>This picture was taken during our last college photoshoot <br>
+a moment that made me truly realize<br>
+how much we’re going to miss each other. ❤️<br>
+Every smile, every laugh captured here<br>
+holds a memory we’ll treasure forever.</p>
+        </div>
+      </div>
+
+      <!-- <div class="page" id="page12">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/pongal.jpeg" alt="Memory 12">
+          <p>This picture was taken during our overall farewell —
+the moment we realized it was truly our last day at college.
+It brought tears, emotions, and a deep sense of nostalgia…
+we already miss those days so much. 💛</p>
+        </div>
+      </div> -->
+
+      <div class="page" id="page13">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/final%20trip%20pic%20od%20college.jpeg" alt="Memory 13">
+          <p>This was a day we’ll never forget <br>
+a small trip to Yercaud, just the three of us on a bike. 🏍️❤️<br>
+We laughed, we enjoyed every moment…<br>
+words are not enough for this picture <br>
+it holds a truly great memory.<br>
+<br>
+Every moment was filled with fun, happiness, and smiles.<br>
+<br>
+Those days will never come back… 😔</p>
+        </div>
+      </div>
+
+      <div class="page" id="page14">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/chennai%20meet.jpeg" alt="Memory 14">
+          <p>I hope you remember these day…<br>
+I miss you so much, mole.</p>
+        </div>
+      </div>
+
+      <div class="page" id="page15">
+        <div class="page-content">
+          <img src="https://github.com/nithil112/birthdayWish/raw/main/last%20trip%20of%20chennai.jpeg" alt="Memory 15">
+          <p>That Chennai trip still lingers in my heart filled with laughter, little adventures, and conversations that felt endless.<br>
+On this special day, I wish you a truly beautiful and heartfelt Happy Birthday, Mole! ❤️
+          </p>
+        </div>
+      </div>
+
+    </div>
+    <button class="arrow" id="nextPage" aria-label="Next page">›</button>
+  </div>
+</div>
+
+
+
+
+  <!-- Enhanced Theater Section -->
+  <div id="theater" style="display: none;">
+    <h2 class="theater-title">🎬 Final Birthday Surprise 🎬</h2>
+    
+    <div class="mini-screen-container closed" id="miniScreenContainer">
+      <div class="screen-placeholder">
+        <i class="fas fa-play-circle"></i>
+        <div>Click to Watch on YouTube</div>
+        <div style="font-size: 0.8em; opacity: 0.7;">Your personalized birthday message! 🎥✨</div>
+      </div>
+    </div>
+    <div id="emotion-audio" style="margin: 20px 0; text-align: center; position: relative;">
+  <p>recently came across this audio, and the very first person who came to my mind was you, Mole. <br>
+    Some bonds remain unchanged, no matter how much life changes. <br>
+    I wanted to share this with you because, no matter what changes come, you’ll always remain my best and most trusted friend forever.</p>
+  <audio id="sadAudio" controls>
+    <source src="https://github.com/nithil112/birthdayWish/raw/main/b2audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <!-- Animation icon -->
+  <div id="audioAnim" style="display:none; margin-top: 10px;">
+    <span class="bars"></span>
+    <span class="bars"></span>
+    <span class="bars"></span>
+    <span class="bars"></span>
+  </div>
+</div>
+
+
+    <div class="birthday-message">
+      <p>
+        Happy Birthday, Vidhya Mole! 🎂✨<br>
+        <br>
+On your special day, I wanted my wish to feel a little different. It may come later in the evening, but it comes straight from the heart  because you’ll always hold a special place at the very top. 💖<br>
+<br>
+You truly have a wonderful heart, and I feel grateful to have you as my best friend. It might be a little late, but my only wish is to make you smile and feel happy today. ✨<br>
+<br>
+I hope this year brings you endless happiness, success, and all the dreams you’ve been waiting for. Stay the same cheerful, kind, and amazing person you are.<br>
+<br>
+Wishing you lots of joy, laughter, and unforgettable moments today and always.<br>
+Enjoy your day to the fullest, Vidhya! 🎉💐<br>
+<br>
+Once again, wishing you a very beautiful and memorable 22nd birthday, Mole 🤍
+      </p>
+    </div>
+
+    <div class="gift-section">
+      <div class="gift-box" id="giftBox">
+        <div class="gift-cube" id="giftCube">
+          <div class="gift-face gift-front"></div>
+          <div class="gift-face gift-back"></div>
+          <div class="gift-face gift-right"></div>
+          <div class="gift-face gift-left"></div>
+          <div class="gift-face gift-top"></div>
+          <div class="gift-face gift-bottom"></div>
+          <div class="gift-lid"></div>
+          <div class="gift-inside">🎁 SURPRISE! 🎁<br>Click me for more!</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="share-btn" onclick="shareBirthday()">
+      <i class="fas fa-share-alt"></i> Share this Memory
+    </button>
+
+    <button class="share-btn" style="background: linear-gradient(45deg, #ff6b9d, #c2185b);" onclick="restartExperience()">
+      <i class="fas fa-redo"></i> Relive the Journey
+    </button>
+
+    <button class="share-btn" style="background: linear-gradient(45deg, #ffd700, #ff6b9d);" id="celebrateBtn">
+      <i class="fas fa-party-horn"></i> Celebrate More!
+    </button>
+  </div>
+
+  <!-- End Popup -->
+  <div id="endPopup">
+    <p>That's the last page! 🎉</p>
+    <button onclick="closeEndPopup()">Close</button>
+  </div>
+
+  <script>
+    // Elements
+    const video = document.getElementById('introVideo');
+    const intro = document.getElementById('intro');
+    const album = document.getElementById('album');
+    const theater = document.getElementById('theater');
+    const miniScreenContainer = document.getElementById('miniScreenContainer');
+    const music = document.getElementById('bgMusic');
+    const musicControl = document.getElementById('musicControl');
+    const loader = document.getElementById('loader');
+    const welcomeOverlay = document.getElementById('welcomeOverlay');
+    const startBtn = document.getElementById('startBtn');
+    const pages = document.querySelectorAll('.page');
+    const floatingHearts = document.getElementById('floatingHearts');
+    const fireworks = document.getElementById('fireworks');
+    const confetti = document.getElementById('confetti');
+    const giftCube = document.getElementById('giftCube');
+    const endPopup = document.getElementById('endPopup');
+    const celebrateBtn = document.getElementById('celebrateBtn');
+    const confettiContainer = document.getElementById('confettiContainer') || document.createElement('div');
+
+    let isMusicPlaying = false;
+    let currentPage = 0;
+    let heartsInterval;
+
+    // Initialize z-index for pages
+    pages.forEach((page, index) => {
+      page.style.zIndex = pages.length - index;
+    });
+
+    // Load event
+    window.addEventListener('load', () => {
+      music.volume = 0.3;
+      music.play().then(() => {
+        isMusicPlaying = true;
+        musicControl.classList.add('playing');
+      }).catch(() => {
+        musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      });
+
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+          welcomeOverlay.classList.add('active');
+          startFloatingHearts();
+        }, 500);
+      }, 3000);
+    });
+
+    // Music control
+    musicControl.addEventListener('click', () => {
+      if (isMusicPlaying) {
+        music.pause();
+        isMusicPlaying = false;
+        musicControl.classList.remove('playing');
+        musicControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      } else {
+        music.play();
+        isMusicPlaying = true;
+        musicControl.classList.add('playing');
+        musicControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+    });
+
+    // Start experience
+    startBtn.addEventListener('click', () => {
+      welcomeOverlay.classList.remove('active');
+      setTimeout(() => {
+        welcomeOverlay.style.display = 'none';
+        intro.style.display = 'flex';
+        album.style.display = 'block';
+        theater.style.display = 'block';
+        video.play();
+      }, 1000);
+    });
+
+    // Album navigation
+    document.getElementById('nextPage').addEventListener('click', () => {
+      if (currentPage < pages.length - 1) {
+        pages[currentPage].classList.add('flipped');
+        currentPage++;
+      } else {
+        endPopup.style.display = 'block';
+        setTimeout(() => endPopup.classList.add('active'), 10);
+      }
+    });
+
+    document.getElementById('prevPage').addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        pages[currentPage].classList.remove('flipped');
+      }
+    });
+    
+
+    // Close end popup
+    function closeEndPopup() {
+      endPopup.classList.remove('active');
+      setTimeout(() => endPopup.style.display = 'none', 500);
+    }
+
+    // Touch support
+    let touchStartX = 0, touchEndX = 0;
+    album.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+    album.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        if (currentPage < pages.length - 1) {
+          pages[currentPage].classList.add('flipped');
+          currentPage++;
+        } else {
+          endPopup.style.display = 'block';
+          setTimeout(() => endPopup.classList.add('active'), 10);
+        }
+      } else if (touchEndX - touchStartX > 50 && currentPage > 0) {
+        currentPage--;
+        pages[currentPage].classList.remove('flipped');
+      }
+    });
+   
+
+    // Mini screen - open in YouTube
+    miniScreenContainer.addEventListener('click', () => {
+      window.open('https://www.youtube.com/watch?v=-Roohrkbawc', '_blank');
+    });
+
+
+    // Floating hearts
+    function startFloatingHearts() {
+      heartsInterval = setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = ['💖', '💕', '✨', '🎂'][Math.floor(Math.random() * 4)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        floatingHearts.appendChild(heart);
+        setTimeout(() => heart.remove(), 7000);
+      }, 800);
+    }
+
+    // Fireworks
+    function createFireworks(count = 20) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const firework = document.createElement('div');
+          firework.className = 'firework';
+          firework.style.left = Math.random() * 100 + 'vw';
+          firework.style.top = Math.random() * 100 + 'vh';
+          const colors = ['#ff6b9d', '#ffd700', '#4ecdc4', '#c2185b', '#ff69b4', '#00ff00'];
+          firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+          firework.style.width = Math.random() * 8 + 4 + 'px';
+          firework.style.height = firework.style.width;
+          fireworks.appendChild(firework);
+          setTimeout(() => firework.remove(), 2000);
+        }, i * 100);
+      }
+    }
+
+    // Confetti
+    function createConfetti(count = 100) {
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.animationDelay = Math.random() * 3 + 's';
+        piece.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        const colors = ['#ff6b9d', '#ffd700', '#4ecdc4', '#c2185b', '#ff69b4', '#00ff00'];
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width = Math.random() * 10 + 5 + 'px';
+        piece.style.height = Math.random() * 20 + 10 + 'px';
+        confetti.appendChild(piece);
+        setTimeout(() => piece.remove(), 8000);
+      }
+    }
+
+    // Gift box click - enhanced with more fireworks for "blast"
+    giftCube.addEventListener('click', () => {
+      if (!giftCube.classList.contains('open')) {
+        giftCube.classList.add('open');
+        createFireworks(50); // More fireworks for blast effect
+        setTimeout(() => createFireworks(30), 500); // Additional burst
+      }
+    });
+
+    // Celebrate button
+    celebrateBtn.addEventListener('click', () => {
+      createFireworks(100);
+      createConfetti(200);
+      setTimeout(() => createFireworks(50), 1000);
+      setTimeout(() => createConfetti(100), 1500);
+    });
+
+    // Share function
+    function shareBirthday() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Vidhya\'s Birthday Surprise',
+          text: 'Check out this amazing birthday gift!',
+          url: window.location.href
+        });
+      } else {
+        alert('Copy this link and share with friends!\n' + window.location.href);
+      }
+    }
+
+    // Restart experience
+    function restartExperience() {
+      currentPage = 0;
+      pages.forEach(page => page.classList.remove('flipped'));
+      theater.style.display = 'none';
+      intro.style.display = 'flex';
+      video.currentTime = 0;
+      video.play();
+      setTimeout(() => {
+        theater.style.display = 'block';
+      }, 1000);
+    }
+
+    // Handle visibility
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && isMusicPlaying) {
+        music.play();
+      }
+    });
+    const audio = document.getElementById("sadAudio");
+const anim = document.getElementById("audioAnim");
+
+audio.addEventListener("play", () => {
+  anim.style.display = "block";
+});
+
+audio.addEventListener("pause", () => {
+  anim.style.display = "none";
+});
+
+audio.addEventListener("ended", () => {
+  anim.style.display = "none";
+});
+
+  </script>
+</body>
+</html>
